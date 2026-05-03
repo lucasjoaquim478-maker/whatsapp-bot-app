@@ -1,0 +1,39 @@
+{
+  "name": "whatsapp-bot-app",
+  "version": "1.0.0",
+  "description": "Bot WhatsApp com auto-update",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "update": "electron-updater"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0",
+    "electron-builder": "^24.9.1",
+    "electron-updater": "^6.1.7"
+  },
+  "dependencies": {
+    "electron-log": "^5.0.0",
+    "electron-updater": "^6.1.7"
+  },
+  "build": {
+    "appId": "com.bot.whatsapp",
+    "productName": "WhatsApp Bot",
+    "win": {
+      "target": "nsis",
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "seu-usuario",
+      "repo": "whatsapp-bot-repo"
+    }
+  }
+}

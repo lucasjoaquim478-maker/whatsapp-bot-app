@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Bot</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            padding: 20px;
+            background: rgba(0,0,0,0.3);
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 { font-size: 24px; color: #25d366; }
+        .status {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        .status.online { background: #25d366; color: #fff; }
+        .status.offline { background: #f44336; color: #fff; }
+        .controls {
+            padding: 20px;
+            display: flex;
+            gap: 10px;
+            background: rgba(0,0,0,0.2);
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        .btn-start { background: #25d366; color: #fff; }
+        .btn-start:hover { background: #20b856; }
+        .btn-stop { background: #f44336; color: #fff; }
+        .btn-stop:hover { background: #d32f2f; }
+        .btn-update { background: #2196f3; color: #fff; }
+        .btn-update:hover { background: #1976d2; }
+        .log-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #0d1117;
+            margin: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .log-entry { color: #c9d1d9; margin-bottom: 5px; }
+        .log-entry.error { color: #f44336; }
+        .log-entry.success { color: #25d366; }
+        .log-entry.info { color: #2196f3; }
+        footer {
+            padding: 10px;
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🤖 WhatsApp Bot</h1>
+        <span id="status" class="status offline">OFFLINE</span>
+    </header>
+    
+    <div class="controls">
+        <button class="btn-start" onclick="startBot()">▶ Iniciar Bot</button>
+        <button class="btn-stop" onclick="stopBot()">⏹ Parar Bot</button>
+        <button class="btn-update" onclick="checkUpdate()">🔄 Verificar Updates</button>
+        <button onclick="clearLog()">🗑 Limpar Logs</button>
+    </div>
+    
+    <div id="log" class="log-container"></div>
+    
+    <footer>
+        WhatsApp Bot v1.0.0
+    </footer>
+
+    <script>
+        addLog('🤖 WhatsApp Bot iniciado!', 'info');
+        
+        async function startBot() {
+            document.getElementById('status').textContent = 'inicando...';
+            document.getElementById('status').className = 'status online';
+            window.api.startBot();
+        }
+        
+        async function stopBot() {
+            window.api.stopBot();
+        }
+        
+        function checkUpdate() {
+            addLog('Verificando updates...', 'info');
+            window.api.checkUpdate();
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        function addLog(msg, type = '') {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+        
+        window.api.onLog((msg) => addLog(msg));
+        
+        window.api.onStatus((status) => {
+            const el = document.getElementById('status');
+            el.textContent = status.toUpperCase();
+            el.className = `status ${status}`;
+        });
+    </script>
+</body>
+</html>

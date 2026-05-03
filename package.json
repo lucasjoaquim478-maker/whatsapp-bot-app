@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win",
+    "build": "electron-builder --win portable",
     "update": "electron-updater"
   },
   "author": "",
@@ -23,17 +23,15 @@
     "appId": "com.bot.whatsapp",
     "productName": "WhatsApp Bot",
     "win": {
-      "target": "nsis",
-      "icon": "assets/icon.ico"
+      "target": "portable"
     },
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
+    "portable": {
+      "artifactName": "WhatsAppBot.exe"
     },
     "publish": {
       "provider": "github",
-      "owner": "seu-usuario",
-      "repo": "whatsapp-bot-repo"
+      "owner": "lucasjoaquim478-maker",
+      "repo": "whatsapp-bot-app"
     }
   }
 }

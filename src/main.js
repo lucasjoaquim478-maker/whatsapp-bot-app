@@ -1,5 +1,4 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
-const { autoUpdater } = require('electron-updater');
 const log = require('electron-log');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -9,9 +8,6 @@ let botProcess = null;
 
 log.transports.file.level = 'info';
 log.transports.console.level = 'info';
-
-autoUpdater.logger = log;
-autoUpdater.autoDownload = false;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
@@ -27,31 +23,9 @@ function createWindow() {
     mainWindow.on('closed', () => { mainWindow = null; });
 
     mainWindow.webContents.on('did-finish-load', () => {
-        mainWindow.webContents.send('log', '🤖 App iniciada! Aguardando...\n');
-        checkForUpdates();
+        mainWindow.webContents.send('log', '🤖 App iniciada!\n');
     });
 }
-
-function checkForUpdates() {
-    autoUpdater.checkForUpdates().catch(err => {
-        mainWindow?.webContents.send('log', `Erro ao verificar updates: ${err.message}\n`);
-    });
-}
-
-autoUpdater.on('update-available', (info) => {
-    mainWindow?.webContents.send('log', `📦 Update disponível: ${info.version}\n`);
-    mainWindow?.webContents.send('log', 'Baixando update...\n');
-    autoUpdater.downloadUpdate();
-});
-
-autoUpdater.on('update-downloaded', () => {
-    mainWindow?.webContents.send('log', '✅ Update baixado! Reiniciando...\n');
-    autoUpdater.quitAndInstall();
-});
-
-autoUpdater.on('error', (err) => {
-    mainWindow?.webContents.send('log', `Erro: ${err.message}\n`);
-});
 
 function startBot() {
     if (botProcess) {
@@ -77,8 +51,8 @@ function startBot() {
         mainWindow?.webContents.send('log', `❌ ${msg}`);
     });
 
-    botProcess.on('close', (code) => {
-        mainWindow?.webContents.send('log', `Bot encerrado (código: ${code})\n`);
+    botProcess.on('close', () => {
+        mainWindow?.webContents.send('log', 'Bot encerrado\n');
         botProcess = null;
     });
 
@@ -91,7 +65,6 @@ function stopBot() {
         mainWindow?.webContents.send('log', '⚠️ Bot não está rodando!\n');
         return;
     }
-
     botProcess.kill();
     botProcess = null;
     mainWindow?.webContents.send('log', '⏹️ Bot parado!\n');
@@ -100,8 +73,6 @@ function stopBot() {
 
 ipcMain.on('start-bot', startBot);
 ipcMain.on('stop-bot', stopBot);
-ipcMain.on('check-update', checkForUpdates);
-
 ipcMain.handle('get-status', () => botProcess ? 'online' : 'offline');
 
 app.whenReady().then(() => {

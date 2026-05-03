@@ -1,7 +1,7 @@
 {
   "name": "whatsapp-bot-app",
   "version": "1.0.0",
-  "description": "Bot WhatsApp com auto-update",
+  "description": "Bot WhatsApp Desktop",
   "main": "src/main.js",
   "scripts": {
     "start": "electron ."

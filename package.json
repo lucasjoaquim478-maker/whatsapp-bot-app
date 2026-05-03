@@ -5,8 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win portable",
-    "update": "electron-updater"
+    "build": "electron-builder --win portable"
   },
   "author": "",
   "license": "MIT",
@@ -24,14 +23,6 @@
     "productName": "WhatsApp Bot",
     "win": {
       "target": "portable"
-    },
-    "portable": {
-      "artifactName": "WhatsAppBot.exe"
-    },
-    "publish": {
-      "provider": "github",
-      "owner": "lucasjoaquim478-maker",
-      "repo": "whatsapp-bot-app"
     }
   }
 }
